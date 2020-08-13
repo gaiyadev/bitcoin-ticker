@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 const List<String> currenciesList = [
   'AUD',
   'BRL',
@@ -27,5 +30,22 @@ const List<String> cryptoList = [
   'ETH',
   'LTC',
 ];
+const apiKey = 'apikey';
+const coinAPIURL =
+    'https://apiv2.bitcoinaverage.com/indices/$apiKey/ticker/BTCUSD';
 
-class CoinData {}
+//GET https://apiv2.bitcoinaverage.com/indices/token/ticker/BTCUSD
+class CoinData {
+  Future getCoinData() async {
+//    String requestURL = '$coinAPIURL/BTCUSD?apikey=$apiKey';
+    http.Response response = await http.get(coinAPIURL);
+    if (response.statusCode == 200) {
+      var decodedData = jsonDecode(response.body);
+      var lastPrice = decodedData['rate'];
+      return lastPrice;
+    } else {
+      print(response.statusCode);
+      throw 'Problem with the get request';
+    }
+  }
+}
