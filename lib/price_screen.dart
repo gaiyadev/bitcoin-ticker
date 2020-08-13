@@ -27,6 +27,7 @@ class _PriceScreenState extends State<PriceScreen> {
       onChanged: (value) {
         setState(() {
           selectedCurrency = value;
+          getRealData();
         });
       },
     );
@@ -49,6 +50,10 @@ class _PriceScreenState extends State<PriceScreen> {
       itemExtent: 38.0,
       onSelectedItemChanged: (selectedIndex) {
         print(selectedIndex);
+        setState(() {
+          selectedCurrency = currenciesList[selectedIndex];
+          getRealData();
+        });
       },
       children: pickerItems,
     );
@@ -65,12 +70,12 @@ class _PriceScreenState extends State<PriceScreen> {
     }
   }
 
-  String bitcoinValueInUSD = '?';
+  String bitcoinValue = '?';
   void getRealData() async {
     try {
       double data = await CoinData().getCoinData();
       setState(() {
-        bitcoinValueInUSD = data.toStringAsFixed(0);
+        bitcoinValue = data.toStringAsFixed(0);
       });
     } catch (e) {
       print(e);
@@ -104,7 +109,7 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = $bitcoinValueInUSD USD',
+                  '1 BTC = $bitcoinValue $selectedCurrency USD',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
